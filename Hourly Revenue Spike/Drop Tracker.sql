@@ -19,7 +19,8 @@ with td as
          , sum(sum_win_price)       AS revenue_wins
          , sum(sum_win_price_pub)       AS revenue_pub_wins    
       from header_bidder.statistic_group 
-     where event_date > toDate(now())   
+     where event_date <= toDate(now() - INTERVAL 1 DAY)
+       and event_date > toDate(now() - INTERVAL 2 DAY)
        and site_id = 11373 ---for example
   group by site_id
          , toHour(event_date)
@@ -34,8 +35,8 @@ yd as
          , sum(sum_win_price)       AS revenue_wins
          , sum(sum_win_price_pub)       AS revenue_pub_wins    
       from header_bidder.statistic_group 
-     where event_date <= toDate(now() - INTERVAL 1 DAY)
-       and event_date > toDate(now() - INTERVAL 2 DAY)
+     where event_date <= toDate(now() - INTERVAL 2 DAY)
+       and event_date > toDate(now() - INTERVAL 3 DAY)
        and site_id = 11373 ---for example 
   group by site_id
          , toHour(event_date)
@@ -61,5 +62,5 @@ yd as
       from td
  full join yd on td.site_id = yd.site_id 
              and td.th = yd.th
-     where td.th<>0 ---to exclude hours that we yet have no data for
   order by hr
+    
